@@ -3,6 +3,12 @@
 Part of the fun of Ricochet Robots is holding all of the moves in your head, but I think it would be
 cool to see how fast the game can get with computer aids, and real time feedback.
 
+Canvas to draw the board: https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Basic_usage
+Websockets to communicate: http://www.html5rocks.com/en/tutorials/websockets/basics/
+
+This could be built with a light backend that handles creating games, and connecting players
+to the same sockets, or the server could hold some of the game state.
+
 # Some thoughts
 
 - Robots move in straight lines until they hit walls or other robots.
@@ -65,8 +71,10 @@ cool to see how fast the game can get with computer aids, and real time feedback
 ## Game
 
 1. Target spaces are randomly shuffled.
-2. Pop the first target and start a round with it.
-3. GOTO 2
+2. Robots are placed randomly on the board.
+3. Pop the first target and start a round with it.
+4. The final state of the winning solution is used as the starting state of the next round.
+5. GOTO 3
 
 ## Round
 
