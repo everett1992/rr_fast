@@ -109,6 +109,11 @@ $ ->
 
   class Board
     constructor: (q1, q2, q3, q4) ->
+      parse_tile = (tile) ->
+        _(tile).map (row) ->
+          _(row).map (char) ->
+             LEGEND[char]
+
       rotate = (matrix) ->
 
         # Create a n x n array where n is matrix.length
@@ -116,24 +121,15 @@ $ ->
         _(matrix.length).times ->
           arr.push(Array(matrix.length))
 
-       _(matrix).each (row, x) ->
-         _(row).each (cell, y) ->
+        _(matrix).each (row, x) ->
+          _(row).each (cell, y) ->
             arr[(matrix.length - 1) - y][x] = cell
         return arr
 
-      q1 = q1
-      q2 = q2.rotate(1)
-      q3 = q3.rotate(1).rotate(1)
-      q4 = q4.rotate(1).rotate(1).rotate(1)
+      q1 = parse_tile(q1)
+      q2 = rotate(parse_tile(q2))
+      q3 = rotate(rotate(parse_tile(q3)))
+      q4 = rotate(rotate(rotate(parse_tile(q4))))
 
-      top = merge(q1, q2)
-      bot = merge(q3, q4)
 
-  class Tile
-    constructor: (tile) ->
-      _(tile).map (row) ->
-        _(row).map (char) ->
-           LEGEND[char]
-
-  test = new Tile(q4)
-  console.log test
+  board = new Board(q1, q2, q3, q4)
