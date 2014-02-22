@@ -6,8 +6,8 @@ cool to see how fast the game can get with computer aids, and real time feedback
 Canvas to draw the board: https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Basic_usage
 Websockets to communicate: http://www.html5rocks.com/en/tutorials/websockets/basics/
 
-This could be built with a light backend that handles creating games, and connecting players
-to the same sockets, or the server could hold some of the game state.
+This could be built with a light backend that only handles creating games (node.js), and connecting players
+to the same sockets, or the server could hold some of the game state (Ruby on Rails).
 
 # Some thoughts
 
