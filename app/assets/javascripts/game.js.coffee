@@ -105,3 +105,12 @@ q4 = [
   "w             www",
   "w             www"
 ]
+
+class Tile
+  constructor: (tile) ->
+    _(tile).map (row) ->  
+      _(row).map (char) -> 
+         legend(char)
+
+test = new Tile(q4)
+console.log test
