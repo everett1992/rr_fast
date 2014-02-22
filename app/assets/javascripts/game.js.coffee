@@ -105,3 +105,50 @@ q4 = [
   "w             www",
   "w             www"
 ]
+
+###
+window.rotate = (matrix) ->
+
+  # Create a n x n array where n is matrix.length
+  arr = []
+  _(matrix.length).times ->
+    arr.push(Array(matrix.length))
+
+  console.log arr
+  _(matrix).each (row, x) ->
+    _(row).each (cell, y) ->
+      #console.log matrix.length - y
+      arr[(matrix.length - 1) - y][x] = cell
+  return arr
+###
+class Board
+  constructor: (q1, q2, q3, q4) ->
+    rotate = (matrix) ->
+
+      # Create a n x n array where n is matrix.length
+      arr = []
+      _(matrix.length).times ->
+        arr.push(Array(matrix.length))
+
+     _(matrix).each (row, x) ->
+       _(row).each (cell, y) ->
+          arr[(matrix.length - 1) - y][x] = cell
+      return arr
+    ###
+    for (x = 0; x < matrix.length; x ++)
+    arr.push(Array(matrix.length))
+
+    for (x = 0; x < matrix.length; x ++)
+    for(y = 0; y < matrix.length; y ++)
+    arr[y - matrix.length, x] = matrix[x, y]
+    return arr
+    ###
+
+    q1 = q1
+    q2 = q2.rotate(1)
+    q3 = q3.rotate(1).rotate(1)
+    q4 = q4.rotate(1).rotate(1).rotate(1)
+
+    top = merge(q1, q2)
+    bot = merge(q3, q4)
+
