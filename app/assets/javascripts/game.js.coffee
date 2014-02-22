@@ -44,5 +44,24 @@ q1 = [
 	"w          ew    ", 
 	"w             www", 
 	"w      qw     www", 
-	"w             www", 
+	"w      w      www"
+]
+q4 = [
+  "wwwwwwwwwwwwwwwww",
+  "w       w        ",
+  "w                ",
+  "w          jw    ",
+  "w          ww    ",
+  "w wd             ",
+  "w ww             ",
+  "w                ",
+  "ww          ww   ",
+  "w           wp   ",
+  "w                ",
+  "w                ",
+  "w    ww          ",
+  "w    gw          ",
+  "w             www",
+  "w             www",
+  "w             www"
 ]
