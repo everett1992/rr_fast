@@ -26,6 +26,45 @@ legend = {
   p: {color: "yellow", type: "planet"},
   q: {color: "cosmic", type: "cosmic"}
 }
+q1 = [
+	"wwwwwwwwwwwwwwwww",
+	"w         w      ",
+	"w                ",
+	"w    bw          ",
+	"w    w           ",
+	"w                ",
+	"w                ",
+	"w wl             ",
+	"w  w         w   ",
+	"w           wo   ",
+	"w w              ",
+	"w                ",
+	"w          w     ",
+	"w          ew    ",
+	"w             www",
+	"w      qw     www",
+	"w      w      www"
+]
+
+q2 = [
+  "wwwwwwwwwwwwwwwww",
+  "w   w            ",
+  "w        w       ",
+  "w       wa       ",
+  "w  w             ",
+  "w  kw            ",
+  "w                ",
+  "w            nw  ",
+  "w            w   ",
+  "w                ",
+  "w                ",
+  "w                ",
+  "ww               ",
+  "w     wh         ",
+  "w      w      www",
+  "w             www",
+  "w             www"
+]
 
 q3 = [
   "wwwwwwwwwwwwwwwww",
@@ -45,4 +84,24 @@ q3 = [
   "w             www",
   "w             www",
   "w             www",
+]
+
+q4 = [
+  "wwwwwwwwwwwwwwwww",
+  "w       w        ",
+  "w                ",
+  "w          jw    ",
+  "w          ww    ",
+  "w wd             ",
+  "w ww             ",
+  "w                ",
+  "ww          ww   ",
+  "w           wp   ",
+  "w                ",
+  "w                ",
+  "w    ww          ",
+  "w    gw          ",
+  "w             www",
+  "w             www",
+  "w             www"
 ]
