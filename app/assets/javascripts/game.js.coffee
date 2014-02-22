@@ -27,4 +27,22 @@ legend = {
   q: {color: "cosmic", type: "cosmic"}
 }
 
-
+q4 = [
+  "wwwwwwwwwwwwwwwww",
+  "w       w        ",
+  "w                ",
+  "w          jw    ",
+  "w          ww    ",
+  "w wd             ",
+  "w ww             ",
+  "w                ",
+  "ww          ww   ",
+  "w           wp   ",
+  "w                ",
+  "w                ",
+  "w    ww          ",
+  "w    gw          ",
+  "w             www",
+  "w             www",
+  "w             www"
+]
