@@ -230,6 +230,8 @@ $ ->
       console.log(self.targets)
       @current_target=@targets.pop()
 
+      self.moves = []
+
 
     draw: () ->
       self=this
@@ -373,12 +375,16 @@ $ ->
       _(@robots).each (robot) =>
         robot.x = robot.start_x
         robot.y = robot.start_y
+      @moves = []
       @draw()
 
 
       #Game Logic
       #-move robot
     move_robot: (direction) ->
+      # Add move to the current set of moves
+      @moves.push { robot: @selected_robot, direction: direction }
+
       if direction is "up"
         while true
           break if @board[@selected_robot.y-1][@selected_robot.x].type=="wall" || _(@robots).some (robot) =>
