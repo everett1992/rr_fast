@@ -1,6 +1,6 @@
 RrFast::Application.routes.draw do
   root to: 'game#index'
-  get '/:game_id' => 'game#show', as: 'game'
+  get 'game/:game_id' => 'game#show', as: 'game'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

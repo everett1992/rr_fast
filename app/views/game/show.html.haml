@@ -1,1 +1,4 @@
-%div#game(data-game-id=@game_id height="100%" width="100%")
+%div#game(data-game-id=@game_id height="100%" width="100%" data-uri="#{request.host}:#{request.port}/websocket")
+#sidebar
+  %input#user_name
+  #user_list

@@ -358,6 +358,47 @@ $ ->
       @start_x = @x
       @start_y = @y
 
+  class User
+    constructor: (@user_name) ->
+      @points = 0
+    serialize: => { user_name: @user_name, points: @points }
+
+  class Net
+    constructor: (uri) ->
+      @dispatcher = new WebSocketRails(url)
+      @dispatcher.on_open = @create_user
+      @bind_events()
+
+    userListTemplate: (userList) ->
+        userHtml = ""
+        for user in userList
+          userHtml = userHtml + "<li>#{user.user_name} - #{user.points}</li>"
+        $(userHtml)
+
+    update_user_list: (user_list) =>
+      @user_list = user_list
+      $('#user_list').html @userListTemplate(user_list)
+
+    update_user_info: (event) =>
+      @user.user_name = $('input#user_name').val()
+      $('#username').html @user.user_name
+      @dispatcher.trigger 'change_username', @user.serialize()
+
+    create_user: () =>
+      @user = new User("user#{Math.floor(Math.random() * 1000)}")
+      $("#username").html @user.user_name
+      $("input#user_name").val @user.user_name
+      @dispatcher.trigger "new_user", @user.serialize()
+
+    bind_events: () =>
+      @dispatcher.bind 'user_list', @update_user_list
+      $('input#user_name').on 'keyup', @update_user_info
+
   window.game = new Game('#game', q1, q2, q3, q4)
   game.draw()
+
+
+  url = $('#game').data('uri')
+  net = new Net(url)
+
 
