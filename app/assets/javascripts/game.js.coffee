@@ -325,6 +325,21 @@ $ ->
 
       draw_board()
 
+    is_solved: () ->
+      if @current_target.symbol is "cosmic" && @board[@selected_robot.y][@selected_robot.x].type=="target" && @board[@selected_robot.y][@selected_robot.x].symbol=="cosmic"
+        return true
+      else if @board[@selected_robot.y][@selected_robot.x].type=="target" && @selected_robot.color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].symbol==@current_target.symbol
+        return true
+      else
+        return false
+
+    reset: () =>
+      _(@robots).each (robot) =>
+        robot.x = robot.start_x
+        robot.y = robot.start_y
+      @draw()
+
+
       #Game Logic
       #-move robot
     move_robot: (direction) ->
@@ -391,5 +406,8 @@ $ ->
       game.cycle_robot("right")
     else if e.keyCode is 113
       game.cycle_robot("left")
+    else if e.keyCode is 114
+      game.reset()
 
   $(document).keypress(handleKeypress)
+  $('#reset').on "click", game.reset
