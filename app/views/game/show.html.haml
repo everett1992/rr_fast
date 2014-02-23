@@ -1,8 +1,35 @@
 %div#game(data-game-id=@game_id height="100%" width="100%" data-uri="#{request.host}:#{request.port}/websocket")
 #sidebar
   #clock
-  %button#reset Reset
-  %button#new-game New Game
-  %button#next-round Next Round
+  %p
+    %button#reset Reset
+    %button#new-game New Game
+    %button#next-round Next Round
+
+  %strong Description
+  %p
+    Move the robot that is the same color as the shape in the center<br>
+    of the board to the space with that symbol in the fewest number<br>
+    of moves.
+
+  %p
+    Any robot can complete the light blue 'hazard' puzzle.<br>
+
+  %strong Controls
+  %dl
+    %dt
+      w, a, s, d
+    %dd
+      left, right, up, down
+    %dt
+      q, e
+    %dd
+      prev, next robot.
+    %dt
+      r
+    %dd
+      reset
+
+  %span Your name ->
   %input#user_name
   #user_list
