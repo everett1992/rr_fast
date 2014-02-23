@@ -7,25 +7,25 @@ $ ->
   # Legend
   #==============================
   LEGEND = {
-    w: {color: null, type: "wall"},
-    " ": {color: null, type: "space"},
-    a: {color: "red", type: "crescent"},
-    b: {color: "red", type: "star"},
-    c: {color: "red", type: "gear"},
-    d: {color: "red", type: "planet"},
-    e: {color: "blue", type: "crescent"},
-    f: {color: "blue", type: "star"},
-    g: {color: "blue", type: "gear"},
-    h: {color: "blue", type: "planet"},
-    i: {color: "green", type: "crescent"},
-    j: {color: "green", type: "star"},
-    k: {color: "green", type: "gear"},
-    l: {color: "green", type: "planet"},
-    m: {color: "darkorange", type: "crescent"},
-    n: {color: "darkorange", type: "star"},
-    o: {color: "darkorange", type: "gear"},
-    p: {color: "darkorange", type: "planet"},
-    q: {color: "skyblue", type: "cosmic"}
+    w:   {color: null,         type: "wall"},
+    " ": {color: null,         type: "space"},
+    a:   {color: "red",        type: "target", symbol: "crescent"},
+    b:   {color: "red",        type: "target", symbol: "star"},
+    c:   {color: "red",        type: "target", symbol: "gear"},
+    d:   {color: "red",        type: "target", symbol: "planet"},
+    e:   {color: "blue",       type: "target", symbol: "crescent"},
+    f:   {color: "blue",       type: "target", symbol: "star"},
+    g:   {color: "blue",       type: "target", symbol: "gear"},
+    h:   {color: "blue",       type: "target", symbol: "planet"},
+    i:   {color: "green",      type: "target", symbol: "crescent"},
+    j:   {color: "green",      type: "target", symbol: "star"},
+    k:   {color: "green",      type: "target", symbol: "gear"},
+    l:   {color: "green",      type: "target", symbol: "planet"},
+    m:   {color: "darkorange", type: "target", symbol: "crescent"},
+    n:   {color: "darkorange", type: "target", symbol: "star"},
+    o:   {color: "darkorange", type: "target", symbol: "gear"},
+    p:   {color: "darkorange", type: "target", symbol: "planet"},
+    q:   {color: "skyblue",    type: "target", symbol: "cosmic"}
   }
   SYM_TABLE = {
     crescent: "\u25B4"
@@ -245,7 +245,7 @@ $ ->
 
               context.textAlign = "center"
               context.testBaseline = "middle"
-              context.fillText(SYM_TABLE[cell.type], x, y)
+              context.fillText(SYM_TABLE[cell.symbol], x, y)
 
             else if cell.type == "wall" && !even(i) && !even(j)
               x = 0.5 * w * i - 0.5 * w
