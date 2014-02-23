@@ -382,7 +382,7 @@ $ ->
       if @current_target.symbol is "cosmic" && @board[@selected_robot.y][@selected_robot.x].type=="target" && @board[@selected_robot.y][@selected_robot.x].symbol=="cosmic"
         @on_solved(@moves) if @on_solved
         return true
-      else if @board[@selected_robot.y][@selected_robot.x].type=="target" && @selected_robot.color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].symbol==@current_target.symbol
+      else if @board[@selected_robot.y][@selected_robot.x].type=="target" && @selected_robot.color ==  @current_target.color && @board[@selected_robot.y][@selected_robot.x].symbol==@current_target.symbol
         @on_solved(@moves) if @on_solved
         return true
       else
@@ -456,6 +456,15 @@ $ ->
             checker=true
         @move_robot(move.direction)
         setTimeout (->self.playback(moves)), 1000
+    next_round: () =>
+      @get_target()
+      _(@robots).each (robot) =>
+        robot.start_x = robot.x
+        robot.start_y = robot.y
+      @moves = []
+      @draw()
+
+    
 
 
 
@@ -519,12 +528,32 @@ $ ->
       game.draw()
 
     set_end: (time) =>
-      console.log(time - Date.now())
+        @set_clock(time-Date.now())
+
+      #console.log(time - Date.now())
+    set_clock: (time) =>
+      if(time<=0)
+        @dispatcher.trigger('end_round')
+      else
+        $('#clock').html(time)
+        setTimeout((=>@set_clock(time-1000)), 100)
+    declare_winner: (user)=>
+      game.reset()
+      $('#clock').html(user.user_name + ' wins!')
+      game.playback(user.best_solution)
+    next_round: =>
+      @dispatcher.trigger('next_round')
+    start_next_round: =>
+      console.log("dicks dicks dicks");
+      game.next_round()
+
 
     bind_events: () =>
       @dispatcher.bind 'user_list', @update_user_list
       @dispatcher.bind 'get_game', @get_game
       @dispatcher.bind 'set_end', @set_end
+      @dispatcher.bind 'declare_winner', @declare_winner
+      @dispatcher.bind 'next_round', @start_next_round
       $('input#user_name').on 'keyup', @update_user_info
 
   #setTimeout (->game.playback([{"robot":game.robots[0], "direction":"up"},{"robot":game.robots[2], "direction":"right"}])), 1000
@@ -559,3 +588,4 @@ $ ->
   $(document).keypress(handleKeypress)
   $('#reset').on "click", game.reset
   $('#new-game').on "click", new_game
+  $('#next-round'). on "click", net.next_round

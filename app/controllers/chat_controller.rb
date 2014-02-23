@@ -46,4 +46,17 @@ class ChatController < WebsocketRails::BaseController
     users = connection_store.collect_all(:user)
     broadcast_message :user_list, users
   end
+  def end_round
+    user = connection_store.collect_all(:user).sort_by { |user| user[:best_solution].try(:length)||2000000 }.first
+    #The above workaround is only there because this is a hackathon.
+    #Also, it's numberwang.
+    send_message :declare_winner, user
+  end
+  def next_round
+    user = connection_store.collect_all(:user).sort_by { |user| user[:best_solution].try(:length)||2000000 }.first
+    user[:points] += 1
+    connection_store.collect_all(:user).each { |user| user[:best_solution]= nil }
+    broadcast_user_list
+    broadcast_message :next_round, true
+  end
 end
