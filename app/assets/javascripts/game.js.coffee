@@ -127,36 +127,68 @@ $ ->
         return arr
 
       q1 = parse_tile(q1)
+
       q2 = rotate(parse_tile(q2))
       q3 = rotate(rotate(parse_tile(q3)))
       q4 = rotate(rotate(rotate(parse_tile(q4))))
 
     draw: (selector) ->
-      p = 30
-      bh = 1320
-      bw = 1320
-      cw = bw + (p*4) + 2
-      ch = bh + (p*4) + 2
-      selector.empty
+      # Test board
+      arr = []
+      _(33).times ->
+        b = []
+        _(33).times( -> b.push {type: "wall"})
+        arr.push(b)
+
+
+      s = 800
+      w = s / 16
 
       $(selector).empty()
-      canvas = $('<canvas/>').attr({width: cw, height: ch}).appendTo(selector)
+      canvas = $('<canvas/>').attr({width: s, height: s}).appendTo(selector)
 
       context = canvas.get(0).getContext("2d")
 
-      drawBoard=() ->
-        for x in [0..bw] by 40
-          context.moveTo(0.5 + x + p, p)
-          context.lineTo(0.5 + x + p, bh + p)
+      # Draw grid.
+      draw_grid = () ->
+        context.strokeStyle = "grey"
+        for x in [0..s] by w
+          for y in [0..s] by w
+            context.strokeRect(x, y, w, w)
 
-        for x in [0..bh] by 40
-          context.moveTo(p, 0.5 + x + p)
-          context.lineTo(bw + p, 0.5 + x + p)
+        context.stroke()
 
+
+      # Draw walls.
+      draw_walls = () ->
+        even = (n) ->
+          n % 2 == 0
+
+        _(arr).each (row, j) ->
+          _(row).each (cell, i) ->
+            if arr[i][j].type == 'wall'
+              if even(i) && !even(j)
+                y = (j - 1) * 0.5 * w
+                x = 0.5 * i * w
+                context.moveTo(x, y)
+                context.lineTo(x, y + w)
+              else if !even(i) && even(j)
+                x = (i - 1) * 0.5 * w
+                y = 0.5 * j * w
+                context.moveTo(x, y)
+                context.lineTo(x + w, y)
+
+        context.lineWidth = 5
         context.strokeStyle = "black"
         context.stroke()
 
-      drawBoard()
+
+
+      draw_board = ->
+        draw_grid()
+        draw_walls()
+
+      draw_board()
 
   board = new Board(q1, q2, q3, q4)
   board.draw $("#game")
