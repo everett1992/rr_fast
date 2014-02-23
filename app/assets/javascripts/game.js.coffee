@@ -567,5 +567,5 @@ $ ->
     else if e.keyCode is 114
       game.reset()
 
-  $(document).keypress(handleKeypress)
+  $('#game').keypress(handleKeypress)
   $('#new-game').on "click", new_game
