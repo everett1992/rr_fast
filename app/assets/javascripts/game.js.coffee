@@ -195,6 +195,8 @@ $ ->
 
         self.robots.push(new Robot(x, y, color))
 
+      self.selected_robot = self.robots[0]
+
 
 
     draw: (selector) ->
@@ -279,6 +281,14 @@ $ ->
         context.fillStyle = "black"
         context.stroke()
 
+      draw_selected_cell = () =>
+        x = 0.5 * w * @selected_robot.x - 0.5 * w
+        y = 0.5 * w * @selected_robot.y - 0.5 * w
+        context.fillStyle = "grey"
+        context.fillRect(x,y,w,w)
+
+        context.stroke()
+
       draw_robots = () =>
         _(@robots).each (robot) ->
           x = robot.x * 0.5 * w
@@ -297,6 +307,7 @@ $ ->
 
 
       draw_board = ->
+        draw_selected_cell()
         draw_grid()
         draw_walls()
         draw_targets()
