@@ -45,7 +45,7 @@ $ ->
     "w wl             ",
     "w ww        ww   ",
     "w           wo   ",
-    "w w              ",
+    "ww               ",
     "w                ",
     "w          ww    ",
     "w          ew    ",
