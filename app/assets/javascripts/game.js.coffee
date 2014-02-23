@@ -183,14 +183,17 @@ $ ->
       concat()
 
       # Place robots.
-      self.robots = _(COLORS).map (color) ->
+      #self.robots = _(COLORS).map (color, b, c, d) ->
+      self.robots = []
+      _(COLORS).each (color) ->
         x = 0; y = 0
         while true
           x = Math.floor((self.board.length / 2 - 1) * Math.random()) * 2 + 1
           y = Math.floor((self.board.length / 2 - 1) * Math.random()) * 2 + 1
-          break unless self.board[x][y].type == 'wall'
+          break unless self.board[x][y].type == 'wall' || _(self.robots).some (robot) ->
+            robot.x == x && robot.y == y
 
-        new Robot(x, y, color)
+        self.robots.push(new Robot(x, y, color))
 
 
 
@@ -280,14 +283,16 @@ $ ->
         _(@robots).each (robot) ->
           x = robot.x * 0.5 * w
           y = robot.y * 0.5 * w + 0.375 * w
-          console.log x, y
 
           context.font =  "40pt Calibri"
           context.fillStyle = robot.color
+          context.strokeStyle = "black"
+          context.lineWidth = 2
 
           context.textAlign = "center"
           context.testBaseline = "middle"
           context.fillText('\u265F' , x, y)
+          context.strokeText('\u265F' , x, y)
 
 
 
