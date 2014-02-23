@@ -21,11 +21,18 @@ $ ->
     j: {color: "green", type: "star"},
     k: {color: "green", type: "gear"},
     l: {color: "green", type: "planet"},
-    m: {color: "yellow", type: "crescent"},
-    n: {color: "yellow", type: "star"},
-    o: {color: "yellow", type: "gear"},
-    p: {color: "yellow", type: "planet"},
-    q: {color: "cosmic", type: "cosmic"}
+    m: {color: "darkorange", type: "crescent"},
+    n: {color: "darkorange", type: "star"},
+    o: {color: "darkorange", type: "gear"},
+    p: {color: "darkorange", type: "planet"},
+    q: {color: "skyblue", type: "cosmic"}
+  }
+  SYM_TABLE = {
+    crescent: "\u25B4"
+    star: "\u25C6"
+    gear: "\u25A0"
+    planet: "\u25CF"
+    cosmic: "\u2622"
   }
   q1 = [
     "wwwwwwwwwwwwwwwww",
@@ -149,7 +156,6 @@ $ ->
             if(x>0)
               self.board[y][x + q1[0].length - 1] = q4[y][x]
         #Quadrant 3 into board, checking with wall conflicts on q4
-        console.log(q1[0].length - 1);
         _(q3.length).times (x) =>
           if(self.board[q4.length - 1][x + q1[0].length - 1].type is "wall" || q3[0][x].type is "wall")
             self.board[q4.length - 1][x + q1[0].length - 1] = LEGEND['w']
@@ -206,10 +212,8 @@ $ ->
         even = (n) ->
           n % 2 == 0
 
-        console.log @board
         _(@board).each (row, j) ->
           _(row).each (cell, i) ->
-            console.log cell
             if cell.type == 'wall'
               if even(i) && !even(j)
                 y = (j - 1) * 0.5 * w
@@ -226,11 +230,44 @@ $ ->
         context.strokeStyle = "black"
         context.stroke()
 
+      draw_targets = () =>
+        even = (n) ->
+          n % 2 == 0
+
+        _(@board).each (row, j) ->
+          _(row).each (cell, i) ->
+            if cell.color
+              x = w * 0.5 * i
+              y = w * 0.5 * j + 0.3 * w
+
+              context.font =  "40pt Calibri"
+              context.fillStyle = cell.color
+
+              context.textAlign = "center"
+              context.testBaseline = "middle"
+              context.fillText(SYM_TABLE[cell.type], x, y)
+
+            else if cell.type == "wall" && !even(i) && !even(j)
+              x = 0.5 * w * i - 0.5 * w
+              y = 0.5 * w * j - 0.5 * w
+              console.log(x,y)
+              context.strokeStyle = "black"
+              context.fillStyle = "black"
+              context.fillRect(x,y,w,w)
+
+              context.stroke()
+
+        context.lineWidth = 5
+
+        context.strokeStyle = "black"
+        context.fillStyle = "black"
+        context.stroke()
 
 
       draw_board = ->
         draw_grid()
         draw_walls()
+        draw_targets()
 
       draw_board()
 
