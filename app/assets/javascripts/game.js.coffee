@@ -505,6 +505,7 @@ $ ->
         net.solve(moves)
       net.set_game game
       game.draw()
+      $('#reset').on "click", window.game.reset
 
     set_end: (time) =>
       console.log(time - Date.now())
@@ -524,7 +525,7 @@ $ ->
       net.solve(moves)
     net.set_game game
     game.draw()
-
+    $('#reset').on "click", window.game.reset
 
   handleKeypress = (e) =>
     if e.keyCode is 97
@@ -543,5 +544,4 @@ $ ->
       game.reset()
 
   $(document).keypress(handleKeypress)
-  $('#reset').on "click", game.reset
   $('#new-game').on "click", new_game
