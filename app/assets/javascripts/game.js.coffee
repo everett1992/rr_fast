@@ -134,6 +134,7 @@ $ ->
     "w             www",
     "w             www"
   ]
+  LOCKBOOL=false
 
   class Game
     serialize: () ->
@@ -466,9 +467,11 @@ $ ->
             checker=true
       @draw()
     playback: (moves) =>
+      LOCKBOOL=true
       self=this
       move=moves.shift()
       if move
+        LOCKBOOL=true
         checker=false
         _(@robots).each (robot,n) =>
           if(move.robot.color is robot.color && !checker)
@@ -476,6 +479,8 @@ $ ->
             checker=true
         @move_robot(move.direction)
         setTimeout (->self.playback(moves)), 1000
+      else
+        LOCKBOOL=false
     next_round: () =>
       @get_target()
       _(@robots).each (robot) =>
@@ -590,20 +595,21 @@ $ ->
     $('#reset').on "click", window.game.reset
 
   handleKeypress = (e) =>
-    if e.keyCode is 97
-      game.move_robot("left")
-    else if e.keyCode is 119
-      game.move_robot("up")
-    else if e.keyCode is 115
-      game.move_robot("down")
-    else if e.keyCode is 100
-      game.move_robot("right")
-    else if e.keyCode is 101
-      game.cycle_robot("right")
-    else if e.keyCode is 113
-      game.cycle_robot("left")
-    else if e.keyCode is 114
-      game.reset()
+    if(!LOCKBOOL)
+      if e.keyCode is 97
+        game.move_robot("left")
+      else if e.keyCode is 119
+        game.move_robot("up")
+      else if e.keyCode is 115
+        game.move_robot("down")
+      else if e.keyCode is 100
+        game.move_robot("right")
+      else if e.keyCode is 101
+        game.cycle_robot("right")
+      else if e.keyCode is 113
+        game.cycle_robot("left")
+      else if e.keyCode is 114
+        game.reset()
 
   $(document).keypress(handleKeypress)
   $('#new-game').on "click", new_game
