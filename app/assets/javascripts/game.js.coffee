@@ -136,7 +136,14 @@ $ ->
   ]
 
   class Game
-    constructor: (@selector, q1, q2, q3, q4) ->
+    serialize: () ->
+      {
+        robots: @robots,
+        targets: @targets
+        current_target: @current_target
+      }
+
+    constructor: (@selector, q1, q2, q3, q4, game_data) ->
       self=this
       parse_tile = (tile) ->
         _(tile).map (row) ->
@@ -211,24 +218,34 @@ $ ->
                 self.board[y + q1.length - 1][x] = q2[y][x]
       concat()
 
-      # Place robots.
-      #self.robots = _(COLORS).map (color, b, c, d) ->
-      self.robots = []
-      _(COLORS).each (color) ->
-        x = 0; y = 0
-        while true
-          x = Math.floor((self.board.length / 2 - 1) * Math.random()) * 2 + 1
-          y = Math.floor((self.board.length / 2 - 1) * Math.random()) * 2 + 1
-          break unless self.board[x][y].type == 'wall' || _(self.robots).some (robot) ->
-            robot.x == x && robot.y == y
+      if game_data
+        @robots = game_data.robots
+        @targets = game_data.targets
+        @current_target = game_data.current_target
+      else
+        # Create robots and place them randomly
+        @robots = []
+        _(COLORS).each (color) ->
+          x = 0; y = 0
+          while true
+            x = Math.floor((self.board.length / 2 - 1) * Math.random()) * 2 + 1
+            y = Math.floor((self.board.length / 2 - 1) * Math.random()) * 2 + 1
+            break unless self.board[x][y].type == 'wall' || _(self.robots).some (robot) ->
+              robot.x == x && robot.y == y
 
-        self.robots.push(new Robot(x, y, color))
+          self.robots.push(new Robot(x, y, color))
 
+
+        # Shuffle all targets
+        self.targets = _(TARGETS).shuffle()
+
+        # Set the current target
+        @current_target=@targets.pop()
+
+      # Select the first robot.
       self.selected_robot = self.robots[0]
 
-      self.targets = _(TARGETS).shuffle()
-      console.log(self.targets)
-      @current_target=@targets.pop()
+      self.moves = []
 
 
     draw: () ->
@@ -363,10 +380,10 @@ $ ->
       
     is_solved: () ->
       if @current_target.symbol is "cosmic" && @board[@selected_robot.y][@selected_robot.x].type=="target" && @board[@selected_robot.y][@selected_robot.x].symbol=="cosmic"
-        @on_solved() if @on_solved()
+        @on_solved(@moves) if @on_solved
         return true
       else if @board[@selected_robot.y][@selected_robot.x].type=="target" && @selected_robot.color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].symbol==@current_target.symbol
-        @on_solved() if @on_solved()
+        @on_solved(@moves) if @on_solved
         return true
       else
         return false
@@ -377,12 +394,16 @@ $ ->
       _(@robots).each (robot) =>
         robot.x = robot.start_x
         robot.y = robot.start_y
+      @moves = []
       @draw()
 
 
       #Game Logic
       #-move robot
     move_robot: (direction) ->
+      # Add move to the current set of moves
+      @moves.push { robot: @selected_robot, direction: direction }
+
       if direction is "up"
         while true
           break if @board[@selected_robot.y-1][@selected_robot.x].type=="wall" || _(@robots).some (robot) =>
@@ -447,7 +468,8 @@ $ ->
   class User
     constructor: (@user_name) ->
       @points = 0
-    serialize: => { user_name: @user_name, points: @points }
+      @best_solution = null
+    serialize: => { user_name: @user_name, points: @points, best_solution: @best_solution }
 
   class Net
     constructor: (uri) ->
@@ -458,7 +480,10 @@ $ ->
     userListTemplate: (userList) ->
         userHtml = ""
         for user in userList
-          userHtml = userHtml + "<li>#{user.user_name} - #{user.points}</li>"
+          userHtml = userHtml + "<li>#{user.user_name} - #{user.points} points"
+          if user.best_solution
+            userHtml = userHtml + "#{user.best_solution.length} best solution"
+          userHtml = userHtml + "</li>"
         $(userHtml)
 
     update_user_list: (user_list) =>
@@ -476,18 +501,44 @@ $ ->
       $("input#user_name").val @user.user_name
       @dispatcher.trigger "new_user", @user.serialize()
 
+    set_game: (game) =>
+      @dispatcher.trigger "set_game", game.serialize()
+
+    solve: (moves) =>
+      console.log "solved"
+      if !@user.best_solution || moves.length < @user.best_solution.length
+        @user.best_solution = moves
+        @dispatcher.trigger 'solve', @user.serialize()
+
+    get_game: (game_data) =>
+      console.log(game_data)
+      window.game = new Game('#game', q1, q2, q3, q4, game_data)
+      game.on_solved = (moves) ->
+        net.solve(moves)
+      net.set_game game
+      game.draw()
+
+    set_end: (time) =>
+      console.log(time - Date.now())
+
     bind_events: () =>
       @dispatcher.bind 'user_list', @update_user_list
+      @dispatcher.bind 'get_game', @get_game
+      @dispatcher.bind 'set_end', @set_end
       $('input#user_name').on 'keyup', @update_user_info
 
-  window.game = new Game('#game', q1, q2, q3, q4)
-  game.get_target()
-  game.draw()
-  game.on_solved=->console.log("yay")
   #setTimeout (->game.playback([{"robot":game.robots[0], "direction":"up"},{"robot":game.robots[2], "direction":"right"}])), 1000
 
   url = $('#game').data('uri')
-  net = new Net(url)
+  window.net = new Net(url)
+
+  new_game = () ->
+    window.game = new Game('#game', q1, q2, q3, q4)
+    game.on_solved = (moves) ->
+      net.solve(moves)
+    net.set_game game
+    game.draw()
+
 
   handleKeypress = (e) =>
     if e.keyCode is 97
@@ -507,3 +558,4 @@ $ ->
 
   $(document).keypress(handleKeypress)
   $('#reset').on "click", game.reset
+  $('#new-game').on "click", new_game
