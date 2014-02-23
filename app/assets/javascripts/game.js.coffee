@@ -8,7 +8,7 @@ $ ->
   #==============================
   LEGEND = {
     w: {color: null, type: "wall"},
-    " ": {color: null, type: "space"},
+    s: {color: null, type: "space"},
     a: {color: "red", type: "crescent"},
     b: {color: "red", type: "star"},
     c: {color: "red", type: "gear"},
@@ -29,90 +29,92 @@ $ ->
   }
   q1 = [
     "wwwwwwwwwwwwwwwww",
-    "w         w      ",
-    "w                ",
-    "w    bw          ",
-    "w    w           ",
-    "w                ",
-    "w                ",
-    "w wl             ",
-    "w  w         w   ",
-    "w           wo   ",
-    "w w              ",
-    "w                ",
-    "w          w     ",
-    "w          ew    ",
-    "w             www",
-    "w      qw     www",
-    "w      w      www"
+    "wssssssssswssssss",
+    "wssssssssssssssss",
+    "wssssbwssssssssss",
+    "wsssswsssssssssss",
+    "wssssssssssssssss",
+    "wssssssssssssssss",
+    "wswlsssssssssssss",
+    "wsswssssssssswsss",
+    "wssssssssssswosss",
+    "wswssssssssssssss",
+    "wssssssssssssssss",
+    "wsssssssssswsssss",
+    "wssssssssssewssss",
+    "wssssssssssssswww",
+    "wssssssqwssssswww",
+    "wsssssswsssssswww"
   ]
 
   q2 = [
     "wwwwwwwwwwwwwwwww",
-    "w   w            ",
-    "w        w       ",
-    "w       wa       ",
-    "w  w             ",
-    "w  kw            ",
-    "w                ",
-    "w            nw  ",
-    "w            w   ",
-    "w                ",
-    "w                ",
-    "w                ",
-    "ww               ",
-    "w     wh         ",
-    "w      w      www",
-    "w             www",
-    "w             www"
+    "wssswssssssssssss",
+    "wsssssssswsssssss",
+    "wssssssswasssssss",
+    "wsswsssssssssssss",
+    "wsskwssssssssssss",
+    "wssssssssssssssss",
+    "wssssssssssssnwss",
+    "wsssssssssssswsss",
+    "wssssssssssssssss",
+    "wssssssssssssssss",
+    "wssssssssssssssss",
+    "wwsssssssssssssss",
+    "wssssswhsssssssss",
+    "wsssssswsssssswww",
+    "wssssssssssssswww",
+
+    "wssssssssssssswww"
   ]
 
   q3 = [
     "wwwwwwwwwwwwwwwww",
-    "w       w        ",
-    "w                ",
-    "w wc             ",
-    "w  w         w   ",
-    "w            iw  ",
-    "w                ",
-    "w                ",
-    "w                ",
-    "w    fw          ",
-    "w    w         w ",
-    "w             wp ",
-    "ww               ",
-    "w                ",
-    "w             www",
-    "w             www",
-    "w             www",
+    "wssssssswssssssss",
+    "wssssssssssssssss",
+    "wswcsssssssssssss",
+    "wsswssssssssswsss",
+    "wssssssssssssiwss",
+    "wssssssssssssssss",
+    "wssssssssssssssss",
+    "wssssssssssssssss",
+    "wssssfwssssssssss",
+    "wsssswsssssssssws",
+    "wssssssssssssswps",
+    "wwsssssssssssssss",
+    "wssssssssssssssss",
+    "wssssssssssssswww",
+    "wssssssssssssswww",
+    "wssssssssssssswww",
   ]
 
   q4 = [
     "wwwwwwwwwwwwwwwww",
-    "w       w        ",
-    "w                ",
-    "w          jw    ",
-    "w          ww    ",
-    "w wd             ",
-    "w ww             ",
-    "w                ",
-    "ww          ww   ",
-    "w           wp   ",
-    "w                ",
-    "w                ",
-    "w    ww          ",
-    "w    gw          ",
-    "w             www",
-    "w             www",
-    "w             www"
+    "wssssssswssssssss",
+    "wssssssssssssssss",
+    "wssssssssssjwssss",
+    "wsssssssssswwssss",
+    "wswdsssssssssssss",
+    "wswwsssssssssssss",
+    "wssssssssssssssss",
+    "wwsssssssssswwsss",
+    "wssssssssssswpsss",
+    "wssssssssssssssss",
+    "wssssssssssssssss",
+    "wsssswwssssssssss",
+    "wssssgwssssssssss",
+    "wssssssssssssswww",
+    "wssssssssssssswww",
+    "wssssssssssssswww"
   ]
 
-  class Board
+  class Game
     constructor: (q1, q2, q3, q4) ->
+      self=this
       parse_tile = (tile) ->
         _(tile).map (row) ->
           _(row).map (char) ->
-             LEGEND[char]
+            LEGEND[char]
 
       rotate = (matrix) ->
 
@@ -126,10 +128,62 @@ $ ->
             arr[(matrix.length - 1) - y][x] = cell
         return arr
 
+      #NUMBERWANG
       q1 = parse_tile(q1)
+      #console.log((_(q1).map (m) -> (_(m).map (n) -> n.type).join("")))
+      #console.log(q1)
       q2 = rotate(parse_tile(q2))
+      console.log((_(q2).map (m) -> (_(m).map (n) -> n.type).join("")))
+      console.log(q2)
       q3 = rotate(rotate(parse_tile(q3)))
       q4 = rotate(rotate(rotate(parse_tile(q4))))
+      concat = ->
+        self.board = []
+        _((q1.length + q2.length) - 1).times ->
+          self.board.push(Array((q3.length + q4.length) - 1))
+        #Quadrant 1 into board
+        _(q1.length).times (y) ->
+          _(q1[y].length).times (x) ->
+            self.board[y][x] = q1[y][x]
+        #Quadrant 2 into board, and checking with wall conflicts on q1
+        _(q2.length).times (y) ->
+          if(self.board[y][q1.length - 1].type is "wall" || q2[y][0].type is "wall")
+            #console.log("true")
+            self.board[y][q1.length - 1] = LEGEND['w']
+        _(q2.length).times (y) ->
+          _(q2[y].length).times (x) ->
+            if(x>0)
+              self.board[y][x + q1[0].length - 1] = q2[y][x]
+        #Quadrant 3 into board, checking with wall conflicts on q2
+        _(q3.length).times (x) =>
+          if(self.board[q2.length - 1][x + q4[0].length - 1].type is "wall" || q3[q2.length - 1][x + q1[0].length - 1].type is "wall")
+            #console.log("true")
+            self.board[q2.length - 1][x + q4[0].length - 1] = LEGEND['w']
+        _(q3.length).times (y) =>
+          if(y>0)
+            _(q3[y].length).times (x) =>
+              self.board[y + q2.length - 1][x + q4[0].length - 1] = q3[y][x]
+              ###
+        #Quadrant 4 into board, checking with conflicts on q1 AND q3. Tricky.
+          #Quadrant 4 and 1
+        _(q4.length).times (x) =>
+          if(@board[q1.length - 1][x].type is "wall" || q4[0][x].type is "wall")
+            #console.log("true")
+            @board[q1.length - 1][x] = LEGEND['w']
+          #Quadrant 4 and 3
+        _(q4.length).times (y) =>
+          if(@board[y + q1.length - 1][q4.length - 1].type is "wall" || q3[y][0].type is "wall")
+            #console.log(@board[y + q1.length - 1][q4.length - 1])
+            @board[y + q4.length - 1][q4[0].length - 1] = LEGEND['w']
+          #Filling in the rest of q4
+        _(q4.length).times (y) =>
+          if(y>0)
+            _(q4[y].length).times (x) =>
+              if(x<q4[0].length - 1)
+                @board[y + q1.length - 1][x] = q4[y][x]
+                ###
+        console.log(self.board)
+      concat()
 
 
-  board = new Board(q1, q2, q3, q4)
+  bard = new Game(q1, q2, q3, q4)
