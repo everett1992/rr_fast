@@ -1,17 +1,3 @@
-GIT
-  remote: git://github.com/DanKnox/websocket-rails.git
-  revision: 060af4602a053c356eb851efb841c281ee800d01
-  specs:
-    websocket-rails (0.6.2)
-      em-synchrony
-      faye-websocket
-      hiredis
-      rack
-      rails
-      redis
-      redis-objects
-      thin
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -83,6 +69,8 @@ GEM
     minitest (4.7.5)
     multi_json (1.8.4)
     polyglot (0.3.4)
+    quiet_assets (1.0.2)
+      railties (>= 3.1, < 5.0)
     rack (1.5.2)
     rack-test (0.6.2)
       rack (>= 1.0)
@@ -103,8 +91,6 @@ GEM
     rdoc (4.1.1)
       json (~> 1.4)
     redis (3.0.7)
-    redis-objects (0.9.0)
-      redis (>= 3.0.2)
     ref (1.0.5)
     sass (3.2.14)
     sass-rails (4.0.1)
@@ -146,6 +132,14 @@ GEM
       json (>= 1.8.0)
     underscore-rails (1.5.2)
     websocket-driver (0.3.2)
+    websocket-rails (0.6.2)
+      em-synchrony
+      faye-websocket
+      hiredis
+      rack
+      rails
+      redis
+      thin
 
 PLATFORMS
   ruby
@@ -155,6 +149,7 @@ DEPENDENCIES
   haml-rails
   jbuilder (~> 1.2)
   jquery-rails
+  quiet_assets
   rails (= 4.0.0)
   sass-rails (~> 4.0.0)
   sdoc
@@ -164,4 +159,4 @@ DEPENDENCIES
   turbolinks
   uglifier (>= 1.3.0)
   underscore-rails
-  websocket-rails!
+  websocket-rails
