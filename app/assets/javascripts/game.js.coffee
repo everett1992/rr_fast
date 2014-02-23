@@ -6,25 +6,27 @@
 $ ->
   # Legend
   #==============================
+  COLORS = [ 'red', 'blue', 'green', 'darkorange' ]
+
   LEGEND = {
     w:   {color: null,         type: "wall"},
     " ": {color: null,         type: "space"},
-    a:   {color: "red",        type: "target", symbol: "crescent"},
-    b:   {color: "red",        type: "target", symbol: "star"},
-    c:   {color: "red",        type: "target", symbol: "gear"},
-    d:   {color: "red",        type: "target", symbol: "planet"},
-    e:   {color: "blue",       type: "target", symbol: "crescent"},
-    f:   {color: "blue",       type: "target", symbol: "star"},
-    g:   {color: "blue",       type: "target", symbol: "gear"},
-    h:   {color: "blue",       type: "target", symbol: "planet"},
-    i:   {color: "green",      type: "target", symbol: "crescent"},
-    j:   {color: "green",      type: "target", symbol: "star"},
-    k:   {color: "green",      type: "target", symbol: "gear"},
-    l:   {color: "green",      type: "target", symbol: "planet"},
-    m:   {color: "darkorange", type: "target", symbol: "crescent"},
-    n:   {color: "darkorange", type: "target", symbol: "star"},
-    o:   {color: "darkorange", type: "target", symbol: "gear"},
-    p:   {color: "darkorange", type: "target", symbol: "planet"},
+    a:   {color: COLORS[0],        type: "target", symbol: "crescent"},
+    b:   {color: COLORS[0],        type: "target", symbol: "star"},
+    c:   {color: COLORS[0],        type: "target", symbol: "gear"},
+    d:   {color: COLORS[0],        type: "target", symbol: "planet"},
+    e:   {color: COLORS[1],       type: "target", symbol: "crescent"},
+    f:   {color: COLORS[1],       type: "target", symbol: "star"},
+    g:   {color: COLORS[1],       type: "target", symbol: "gear"},
+    h:   {color: COLORS[1],       type: "target", symbol: "planet"},
+    i:   {color: COLORS[2],      type: "target", symbol: "crescent"},
+    j:   {color: COLORS[2],      type: "target", symbol: "star"},
+    k:   {color: COLORS[2],      type: "target", symbol: "gear"},
+    l:   {color: COLORS[2],      type: "target", symbol: "planet"},
+    m:   {color: COLORS[3], type: "target", symbol: "crescent"},
+    n:   {color: COLORS[3], type: "target", symbol: "star"},
+    o:   {color: COLORS[3], type: "target", symbol: "gear"},
+    p:   {color: COLORS[3], type: "target", symbol: "planet"},
     q:   {color: "skyblue",    type: "target", symbol: "cosmic"}
   }
   SYM_TABLE = {
@@ -180,6 +182,18 @@ $ ->
                 self.board[y + q1.length - 1][x] = q2[y][x]
       concat()
 
+      # Place robots.
+      self.robots = _(COLORS).map (color) ->
+        x = 0; y = 0
+        while true
+          x = Math.floor((self.board.length / 2 - 1) * Math.random()) * 2 + 1
+          y = Math.floor((self.board.length / 2 - 1) * Math.random()) * 2 + 1
+          break unless self.board[x][y].type == 'wall'
+
+        new Robot(x, y, color)
+
+
+
     draw: (selector) ->
       # Test board
       arr = []
@@ -229,7 +243,6 @@ $ ->
               else if !even(i) && !even(j)
                 x = 0.5 * w * i - 0.5 * w
                 y = 0.5 * w * j - 0.5 * w
-                console.log(x,y)
                 context.strokeStyle = "black"
                 context.fillStyle = "black"
                 context.fillRect(x,y,w,w)
@@ -248,7 +261,7 @@ $ ->
           _(row).each (cell, i) ->
             if cell.type == 'target'
               x = w * 0.5 * i
-              y = w * 0.5 * j + 0.3 * w
+              y = w * 0.5 * j + 0.27 * w
 
               context.font =  "40pt Calibri"
               context.fillStyle = cell.color
@@ -263,13 +276,33 @@ $ ->
         context.fillStyle = "black"
         context.stroke()
 
+      draw_robots = () =>
+        _(@robots).each (robot) ->
+          x = robot.x * 0.5 * w
+          y = robot.y * 0.5 * w + 0.375 * w
+          console.log x, y
+
+          context.font =  "40pt Calibri"
+          context.fillStyle = robot.color
+
+          context.textAlign = "center"
+          context.testBaseline = "middle"
+          context.fillText('\u265F' , x, y)
+
+
 
       draw_board = ->
         draw_grid()
         draw_walls()
         draw_targets()
+        draw_robots()
 
       draw_board()
+
+  class Robot
+    constructor: (@x, @y, @color) ->
+      @start_x = @x
+      @start_y = @y
 
   game = new Game(q1, q2, q3, q4)
   game.draw $('#game')
