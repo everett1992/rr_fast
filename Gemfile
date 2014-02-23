@@ -23,7 +23,7 @@ gem 'haml-rails'
 
 gem 'therubyracer'
 
-gem 'websocket-rails', git: 'git://github.com/DanKnox/websocket-rails.git'
+gem 'websocket-rails'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -55,3 +55,5 @@ gem 'underscore-rails'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+#
+gem 'quiet_assets'

@@ -361,6 +361,20 @@ $ ->
     get_target: () ->
       @current_target = @targets.pop()
       
+    is_solved: () ->
+      if @current_target.symbol is "cosmic" && @board[@selected_robot.y][@selected_robot.x].type=="target" && @board[@selected_robot.y][@selected_robot.x].symbol=="cosmic"
+        return true
+      else if @board[@selected_robot.y][@selected_robot.x].type=="target" && @selected_robot.color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].symbol==@current_target.symbol
+        return true
+      else
+        return false
+
+    reset: () =>
+      _(@robots).each (robot) =>
+        robot.x = robot.start_x
+        robot.y = robot.start_y
+      @draw()
+
 
       #Game Logic
       #-move robot
@@ -413,9 +427,49 @@ $ ->
       @start_x = @x
       @start_y = @y
 
+  class User
+    constructor: (@user_name) ->
+      @points = 0
+    serialize: => { user_name: @user_name, points: @points }
+
+  class Net
+    constructor: (uri) ->
+      @dispatcher = new WebSocketRails(url)
+      @dispatcher.on_open = @create_user
+      @bind_events()
+
+    userListTemplate: (userList) ->
+        userHtml = ""
+        for user in userList
+          userHtml = userHtml + "<li>#{user.user_name} - #{user.points}</li>"
+        $(userHtml)
+
+    update_user_list: (user_list) =>
+      @user_list = user_list
+      $('#user_list').html @userListTemplate(user_list)
+
+    update_user_info: (event) =>
+      @user.user_name = $('input#user_name').val()
+      $('#username').html @user.user_name
+      @dispatcher.trigger 'change_username', @user.serialize()
+
+    create_user: () =>
+      @user = new User("user#{Math.floor(Math.random() * 1000)}")
+      $("#username").html @user.user_name
+      $("input#user_name").val @user.user_name
+      @dispatcher.trigger "new_user", @user.serialize()
+
+    bind_events: () =>
+      @dispatcher.bind 'user_list', @update_user_list
+      $('input#user_name').on 'keyup', @update_user_info
+
   window.game = new Game('#game', q1, q2, q3, q4)
   game.get_target()
   game.draw()
+
+  url = $('#game').data('uri')
+  net = new Net(url)
+
   handleKeypress = (e) =>
     if e.keyCode is 97
       game.move_robot("left")
@@ -429,5 +483,8 @@ $ ->
       game.cycle_robot("right")
     else if e.keyCode is 113
       game.cycle_robot("left")
+    else if e.keyCode is 114
+      game.reset()
 
   $(document).keypress(handleKeypress)
+  $('#reset').on "click", game.reset
