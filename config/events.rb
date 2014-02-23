@@ -32,4 +32,5 @@ end
 WebsocketRails::EventMap.describe do
   subscribe :new_user, to: ChatController, with_method: :new_user
   subscribe :change_username, to: ChatController, with_method: :change_username
+  subscribe :set_game, to: ChatController, with_method: :set_game
 end

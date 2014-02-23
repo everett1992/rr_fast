@@ -136,7 +136,14 @@ $ ->
   ]
 
   class Game
-    constructor: (@selector, q1, q2, q3, q4) ->
+    serialize: () ->
+      {
+        robots: @robots,
+        targets: @targets
+        current_target: @current_target
+      }
+
+    constructor: (@selector, q1, q2, q3, q4, game_data) ->
       self=this
       parse_tile = (tile) ->
         _(tile).map (row) ->
@@ -211,24 +218,32 @@ $ ->
                 self.board[y + q1.length - 1][x] = q2[y][x]
       concat()
 
-      # Place robots.
-      #self.robots = _(COLORS).map (color, b, c, d) ->
-      self.robots = []
-      _(COLORS).each (color) ->
-        x = 0; y = 0
-        while true
-          x = Math.floor((self.board.length / 2 - 1) * Math.random()) * 2 + 1
-          y = Math.floor((self.board.length / 2 - 1) * Math.random()) * 2 + 1
-          break unless self.board[x][y].type == 'wall' || _(self.robots).some (robot) ->
-            robot.x == x && robot.y == y
+      if game_data
+        @robots = game_data.robots
+        @targets = game_data.targets
+        @current_target = game_data.current_target
+      else
+        # Create robots and place them randomly
+        @robots = []
+        _(COLORS).each (color) ->
+          x = 0; y = 0
+          while true
+            x = Math.floor((self.board.length / 2 - 1) * Math.random()) * 2 + 1
+            y = Math.floor((self.board.length / 2 - 1) * Math.random()) * 2 + 1
+            break unless self.board[x][y].type == 'wall' || _(self.robots).some (robot) ->
+              robot.x == x && robot.y == y
 
-        self.robots.push(new Robot(x, y, color))
+          self.robots.push(new Robot(x, y, color))
 
+
+        # Shuffle all targets
+        self.targets = _(TARGETS).shuffle()
+
+        # Set the current target
+        @current_target=@targets.pop()
+
+      # Select the first robot.
       self.selected_robot = self.robots[0]
-
-      self.targets = _(TARGETS).shuffle()
-      console.log(self.targets)
-      @current_target=@targets.pop()
 
       self.moves = []
 
@@ -465,16 +480,29 @@ $ ->
       $("input#user_name").val @user.user_name
       @dispatcher.trigger "new_user", @user.serialize()
 
+    set_game: (game) =>
+      @dispatcher.trigger "set_game", game.serialize()
+
+    get_game: (game_data) =>
+      console.log(game_data)
+      window.game = new Game('#game', q1, q2, q3, q4, game_data)
+      net.set_game game
+      game.draw()
+
     bind_events: () =>
       @dispatcher.bind 'user_list', @update_user_list
+      @dispatcher.bind 'get_game', @get_game
       $('input#user_name').on 'keyup', @update_user_info
-
-  window.game = new Game('#game', q1, q2, q3, q4)
-  game.get_target()
-  game.draw()
 
   url = $('#game').data('uri')
   net = new Net(url)
+
+  new_game = () ->
+    window.game = new Game('#game', q1, q2, q3, q4)
+    game.get_target()
+    net.set_game game
+    game.draw()
+
 
   handleKeypress = (e) =>
     if e.keyCode is 97
@@ -494,3 +522,4 @@ $ ->
 
   $(document).keypress(handleKeypress)
   $('#reset').on "click", game.reset
+  $('#new-game').on "click", new_game
