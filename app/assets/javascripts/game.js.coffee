@@ -36,6 +36,25 @@ $ ->
     planet: "\u25CF"
     cosmic: "\u2622"
   }
+  TARGETS = [ 
+    {color: COLORS[0], symbol: "crescent"},
+    {color: COLORS[0], symbol: "star"},
+    {color: COLORS[0], symbol: "gear"},
+    {color: COLORS[0], symbol: "planet"},
+    {color: COLORS[1], symbol: "crescent"},
+    {color: COLORS[1], symbol: "star"},
+    {color: COLORS[1], symbol: "gear"},
+    {color: COLORS[1], symbol: "planet"},
+    {color: COLORS[2], symbol: "crescent"},
+    {color: COLORS[2], symbol: "star"},
+    {color: COLORS[2], symbol: "gear"},
+    {color: COLORS[2], symbol: "planet"},
+    {color: COLORS[3], symbol: "crescent"},
+    {color: COLORS[3], symbol: "star"},
+    {color: COLORS[3], symbol: "gear"},
+    {color: COLORS[3], symbol: "planet"},
+    {color: "skyblue", symbol: "cosmic"},
+  ]
   q1 = [
     "wwwwwwwwwwwwwwwww",
     "w         w      ",
@@ -207,6 +226,7 @@ $ ->
 
       self.selected_robot = self.robots[0]
 
+      self.targets = _(TARGETS).shuffle
 
 
     draw: () ->
@@ -294,7 +314,7 @@ $ ->
       draw_selected_cell = () =>
         x = 0.5 * w * @selected_robot.x - 0.5 * w
         y = 0.5 * w * @selected_robot.y - 0.5 * w
-        context.fillStyle = "grey"
+        context.fillStyle = "yellow"
         context.fillRect(x,y,w,w)
 
         context.stroke()
