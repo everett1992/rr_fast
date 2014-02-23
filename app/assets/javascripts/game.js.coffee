@@ -445,6 +445,18 @@ $ ->
               @selected_robot = @robots[(n-1)%4]
             checker=true
       @draw()
+    playback: (moves) =>
+      self=this
+      move=moves.shift()
+      if move
+        checker=false
+        _(@robots).each (robot,n) =>
+          if(move.robot.color is robot.color && !checker)
+            @selected_robot = @robots[n]
+            checker=true
+        @move_robot(move.direction)
+        setTimeout (->self.playback(moves)), 1000
+
 
 
 
@@ -515,6 +527,8 @@ $ ->
       @dispatcher.bind 'get_game', @get_game
       @dispatcher.bind 'set_end', @set_end
       $('input#user_name').on 'keyup', @update_user_info
+
+  #setTimeout (->game.playback([{"robot":game.robots[0], "direction":"up"},{"robot":game.robots[2], "direction":"right"}])), 1000
 
   url = $('#game').data('uri')
   window.net = new Net(url)
