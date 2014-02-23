@@ -353,6 +353,8 @@ $ ->
       @draw()
 
 
+
+
   class Robot
     constructor: (@x, @y, @color) ->
       @start_x = @x
@@ -360,4 +362,14 @@ $ ->
 
   window.game = new Game('#game', q1, q2, q3, q4)
   game.draw()
+  handleKeypress = (e) =>
+    if e.keyCode is 97
+      game.move_robot("left")
+    else if e.keyCode is 119
+      game.move_robot("up")
+    else if e.keyCode is 115
+      game.move_robot("down")
+    else if e.keyCode is 100
+      game.move_robot("right")
 
+  $(document).keypress(handleKeypress)
