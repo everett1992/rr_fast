@@ -135,6 +135,7 @@ $ ->
     "w             www"
   ]
   LOCKBOOL=false
+  NEXTBOOL=false
 
   class Game
     serialize: () ->
@@ -412,11 +413,12 @@ $ ->
 
 
     reset: () =>
-      _(@robots).each (robot) =>
-        robot.x = robot.start_x
-        robot.y = robot.start_y
-      @moves = []
-      @draw()
+      if(!LOCKBOOL)
+        _(@robots).each (robot) =>
+          robot.x = robot.start_x
+          robot.y = robot.start_y
+        @moves = []
+        @draw()
 
 
       #Game Logic
@@ -481,17 +483,19 @@ $ ->
         setTimeout (->self.playback(moves)), 1000
       else
         LOCKBOOL=false
+        NEXTBOOL=true
+
     next_round: () =>
-      @get_target()
-      _(@robots).each (robot) =>
-        robot.start_x = robot.x
-        robot.start_y = robot.y
-      @moves = []
-      @draw()
-
-    
-
-
+      console.log(NEXTBOOL)
+      if NEXTBOOL
+        console.log("But I'm here anyway")
+        @get_target()
+        _(@robots).each (robot) =>
+          robot.start_x = robot.x
+          robot.start_y = robot.y
+        @moves = []
+        @draw()
+        NEXTBOOL=false
 
 
   class Robot
@@ -568,9 +572,11 @@ $ ->
       $('#clock').html(user.user_name + ' wins!')
       game.playback(user.best_solution)
     next_round: =>
-      @dispatcher.trigger('next_round')
+      if NEXTBOOL
+        @dispatcher.trigger('next_round')
     start_next_round: =>
-      game.next_round()
+      if NEXTBOOL
+        game.next_round()
 
 
     bind_events: () =>

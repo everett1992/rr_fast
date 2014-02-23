@@ -15,6 +15,7 @@ class ChatController < WebsocketRails::BaseController
   end
 
   def set_game
+    connection_store.collect_all(:user).each { |user| user[:points]= 0 }
     controller_store[:game] = message
   end
 
