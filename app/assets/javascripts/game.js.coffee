@@ -137,6 +137,17 @@ $ ->
         return arr
 
       q1 = parse_tile(q1)
+
+      ###
+        _   _ _   _ __  __ ____  _____ ______        ___    _   _  ____ _ _ _ _ _ _ _
+       | \ | | | | |  \/  | __ )| ____|  _ \ \      / / \  | \ | |/ ___| | | | | | | |
+       |  \| | | | | |\/| |  _ \|  _| | |_) \ \ /\ / / _ \ |  \| | |  _| | | | | | | |
+       | |\  | |_| | |  | | |_) | |___|  _ < \ V  V / ___ \| |\  | |_| |_|_|_|_|_|_|_|
+       |_| \_|\___/|_|  |_|____/|_____|_| \_\ \_/\_/_/   \_\_| \_|\____(_|_|_|_|_|_|_)
+
+      ###
+
+
       q2 = rotate(parse_tile(q2))
       q3 = rotate(rotate(parse_tile(q3)))
       q4 = rotate(rotate(rotate(parse_tile(q4))))
@@ -193,6 +204,8 @@ $ ->
             robot.x == x && robot.y == y
 
         self.robots.push(new Robot(x, y, color))
+
+      self.selected_robot = self.robots[0]
 
 
 
@@ -278,6 +291,14 @@ $ ->
         context.fillStyle = "black"
         context.stroke()
 
+      draw_selected_cell = () =>
+        x = 0.5 * w * @selected_robot.x - 0.5 * w
+        y = 0.5 * w * @selected_robot.y - 0.5 * w
+        context.fillStyle = "grey"
+        context.fillRect(x,y,w,w)
+
+        context.stroke()
+
       draw_robots = () =>
         _(@robots).each (robot) ->
           x = robot.x * 0.5 * w
@@ -296,6 +317,7 @@ $ ->
 
 
       draw_board = ->
+        draw_selected_cell()
         draw_grid()
         draw_walls()
         draw_targets()
