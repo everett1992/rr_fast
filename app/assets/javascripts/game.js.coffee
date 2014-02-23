@@ -243,7 +243,17 @@ $ ->
         @current_target=@targets.pop()
 
       # Select the first robot.
-      self.selected_robot = self.robots[0]
+      
+      
+      self.selected_robot=self.robots[0]
+      checker=false
+      _(self.robots).each (robot,n) =>
+        if(robot.color is @current_target.color && !checker)
+          self.selected_robot = self.robots[n]
+          checker=true
+
+      #self.selected_robot = self.robots[0]
+
 
       self.moves = []
 
