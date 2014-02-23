@@ -7,7 +7,15 @@ class ChatController < WebsocketRails::BaseController
       user_name: (message[:user_name]),
       points: (message[:points])
     }
-    broadcast_user_list
+    game = controller_store[:game]
+    if game
+      send_message :get_game, game
+      broadcast_user_list
+    end
+  end
+
+  def set_game
+    controller_store[:game] = message
   end
 
   def change_username
