@@ -520,7 +520,7 @@ $ ->
         for user in userList
           userHtml = userHtml + "<li>#{user.user_name} - #{user.points} points"
           if user.best_solution
-            userHtml = userHtml + "#{user.best_solution.length} best solution"
+            userHtml = userHtml + " <strong>#{user.best_solution.length} best solution</strong>"
           userHtml = userHtml + "</li>"
         $(userHtml)
 
