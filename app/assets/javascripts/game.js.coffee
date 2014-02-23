@@ -136,7 +136,6 @@ $ ->
             arr[(matrix.length - 1) - y][x] = cell
         return arr
 
-      #NUMBERWANG
       q1 = parse_tile(q1)
       q2 = rotate(parse_tile(q2))
       q3 = rotate(rotate(parse_tile(q3)))
