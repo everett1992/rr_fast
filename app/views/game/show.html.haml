@@ -1,12 +1,4 @@
 %h3 game #{@game_id}
 %div#game(data-game-id=@game_id)
   %canvas(id="gameBoard" width="150" height="150" style="border:1px solid #000000")
-%script(type="text/javascript")
-  var c = document.getElementById("gameBoard")
-  var ctx = c.getContext("2d") 
-  ctx.fillStyle = "#FF0000" 
-  ctx.fillRect(0,0,150,75)
-  ctx.beginPath()
-  ctx.arc(95,50,40,0,2*Math.PI)
-  ctx.stroke()
 

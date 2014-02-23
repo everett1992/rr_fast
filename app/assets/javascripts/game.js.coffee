@@ -185,5 +185,28 @@ $ ->
         console.log(self.board)
       concat()
 
+    draw: (canvas) ->
+      p = 30
+      bh = 1320
+      bh = 1320
+      cw = bw + (p*4) + 2
+      ch = bh + (p*4) + 2
 
-  bard = new Game(q1, q2, q3, q4)
+      context = canvas.get(0).getContext("2d")
+
+      drawBoard() ->
+        for x in [0..bw] by 40
+          context.moveTo(0.5 + x + p, p)
+          context.lineTo(0.5 + x + p, bh + p)
+
+        for x in [0..bh] by 40
+          context.moveTo(p, 0.5 + x + p)
+          context.lineTo(bw + p, 0.5 + x + p)
+
+        context.strokeStyle = "black"
+        context.stroke()
+
+      drawBoard()
+
+  sampleBoard = new Game(q1, q2, q3, q4)
+
