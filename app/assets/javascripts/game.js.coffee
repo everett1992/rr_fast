@@ -243,7 +243,17 @@ $ ->
         @current_target=@targets.pop()
 
       # Select the first robot.
-      self.selected_robot = self.robots[0]
+      
+      
+      self.selected_robot=self.robots[0]
+      checker=false
+      _(self.robots).each (robot,n) =>
+        if(robot.color is @current_target.color && !checker)
+          self.selected_robot = self.robots[n]
+          checker=true
+
+      #self.selected_robot = self.robots[0]
+
 
       self.moves = []
 
@@ -379,14 +389,24 @@ $ ->
       @current_target = @targets.pop()
       
     is_solved: () ->
-      if @current_target.symbol is "cosmic" && @board[@selected_robot.y][@selected_robot.x].type=="target" && @board[@selected_robot.y][@selected_robot.x].symbol=="cosmic"
+      bored = @board[@selected_robot.y][@selected_robot.x]
+      if bored.type=="target" && @selected_robot.color is @current_target.color && bored.color is @current_target.color && bored.symbol==@current_target.symbol
         @on_solved(@moves) if @on_solved
         return true
-      else if @board[@selected_robot.y][@selected_robot.x].type=="target" && @selected_robot.color ==  @current_target.color && @board[@selected_robot.y][@selected_robot.x].symbol==@current_target.symbol
+      else if @current_target.symbol is "cosmic" && bored.type=="target" && bored.symbol=="cosmic"
         @on_solved(@moves) if @on_solved
         return true
       else
         return false
+
+      #if @board[@selected_robot.y][@selected_robot.x].type=="target" && @selected_robot.color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].symbol==@current_target.symbol
+      # @on_solved(@moves) if @on_solved
+      # return true
+     # else if @current_target.symbol is "cosmic" && @board[@selected_robot.y][@selected_robot.x].type=="target" && @board[@selected_robot.y][@selected_robot.x].symbol=="cosmic"
+     #  @on_solved(@moves) if @on_solved
+     #  return true
+     #else
+     #  return false
 
 
 
@@ -526,6 +546,7 @@ $ ->
         net.solve(moves)
       net.set_game game
       game.draw()
+      $('#reset').on "click", window.game.reset
 
     set_end: (time) =>
         @set_clock(time-Date.now())
@@ -536,7 +557,7 @@ $ ->
         @dispatcher.trigger('end_round')
       else
         $('#clock').html(time)
-        setTimeout((=>@set_clock(time-1000)), 100)
+        setTimeout((=>@set_clock(time-100)), 100)
     declare_winner: (user)=>
       game.reset()
       $('#clock').html(user.user_name + ' wins!')
@@ -544,7 +565,6 @@ $ ->
     next_round: =>
       @dispatcher.trigger('next_round')
     start_next_round: =>
-      console.log("dicks dicks dicks");
       game.next_round()
 
 
@@ -567,7 +587,7 @@ $ ->
       net.solve(moves)
     net.set_game game
     game.draw()
-
+    $('#reset').on "click", window.game.reset
 
   handleKeypress = (e) =>
     if e.keyCode is 97
@@ -586,6 +606,5 @@ $ ->
       game.reset()
 
   $(document).keypress(handleKeypress)
-  $('#reset').on "click", game.reset
   $('#new-game').on "click", new_game
   $('#next-round'). on "click", net.next_round
