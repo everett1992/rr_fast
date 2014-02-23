@@ -226,17 +226,13 @@ $ ->
 
       self.selected_robot = self.robots[0]
 
-      self.targets = _(TARGETS).shuffle
+      self.targets = _(TARGETS).shuffle()
+      console.log(self.targets)
+      @current_target=@targets.pop()
 
 
     draw: () ->
-      # Test board
-      arr = []
-      _(33).times ->
-        b = []
-        _(33).times( -> b.push {type: "wall"})
-        arr.push(b)
-
+      self=this
 
       s = 800
       w = s / 16
@@ -288,6 +284,8 @@ $ ->
         context.strokeStyle = "black"
         context.stroke()
 
+
+        
       draw_targets = () =>
         even = (n) ->
           n % 2 == 0
@@ -335,6 +333,20 @@ $ ->
           context.strokeText('\u265F' , x, y)
 
 
+      draw_current_target = () =>
+          x = s/2
+          y = s/2 + 0.65*w
+
+          context.font =  "100pt Calibri"
+          context.fillStyle = @current_target.color
+          context.strokeStyle = "white"
+          context.lineWidth = 3
+
+          context.textAlign = "center"
+          context.testBaseline = "middle"
+          context.fillText(SYM_TABLE[@current_target.symbol], x, y)
+          context.strokeText(SYM_TABLE[@current_target.symbol] , x, y)
+
 
       draw_board = ->
         draw_selected_cell()
@@ -342,8 +354,13 @@ $ ->
         draw_walls()
         draw_targets()
         draw_robots()
+        draw_current_target()
 
       draw_board()
+
+    get_target: () ->
+      @current_target = @targets.pop()
+      
 
       #Game Logic
       #-move robot
@@ -397,6 +414,7 @@ $ ->
       @start_y = @y
 
   window.game = new Game('#game', q1, q2, q3, q4)
+  game.get_target()
   game.draw()
   handleKeypress = (e) =>
     if e.keyCode is 97
