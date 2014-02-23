@@ -424,6 +424,18 @@ $ ->
               @selected_robot = @robots[(n-1)%4]
             checker=true
       @draw()
+    playback: (moves) =>
+      self=this
+      move=moves.shift()
+      if move
+        checker=false
+        _(@robots).each (robot,n) =>
+          if(move.robot.color is robot.color && !checker)
+            @selected_robot = @robots[n]
+            checker=true
+        @move_robot(move.direction)
+        setTimeout (->self.playback(moves)), 1000
+
 
 
 
@@ -472,6 +484,7 @@ $ ->
   game.get_target()
   game.draw()
   game.on_solved=->console.log("yay")
+  #setTimeout (->game.playback([{"robot":game.robots[0], "direction":"up"},{"robot":game.robots[2], "direction":"right"}])), 1000
 
   url = $('#game').data('uri')
   net = new Net(url)
