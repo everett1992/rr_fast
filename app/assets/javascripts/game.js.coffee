@@ -303,6 +303,34 @@ $ ->
 
       draw_board()
 
+      #Game Logic
+      #-move robot
+    move_robot: (direction) ->
+      @selected_robot
+      if direction is "up"
+        while true
+          break if @board[@selected_robot.y-1][@selected_robot.x].type=="wall" || _(@robots).some (robot) ->
+            robot.x == @selected_robot.x && robot.y == @selected_robots.y-2
+          @selected_robot.y-=2
+      if direction is "down"
+        while true
+          break if @board[@selected_robot.y+1][@selected_robot.x].type=="wall" || _(@robots).some (robot) ->
+            robot.x == @selected_robot.x && robot.y == @selected_robots.y+2
+          @selected_robot.y+=2
+      if direction is "left"
+        while true
+          break if @board[@selected_robot.y][@selected_robot.x-1].type=="wall" || _(@robots).some (robot) ->
+            robot.x == @selected_robot.x-2 && robot.y == @selected_robots.y
+          @selected_robot.x-=2
+      if direction is "right"
+        while true
+          break if @board[@selected_robot.y][@selected_robot.x+1].type=="wall" || _(@robots).some (robot) ->
+            robot.x == @selected_robot.x+2 && robot.y == @selected_robots.y
+          @selected_robot.x+=2
+
+      draw_board()
+
+
   class Robot
     constructor: (@x, @y, @color) ->
       @start_x = @x
