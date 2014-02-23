@@ -130,7 +130,6 @@ $ ->
 
       #NUMBERWANG
       q1 = parse_tile(q1)
-
       q2 = rotate(parse_tile(q2))
       q3 = rotate(rotate(parse_tile(q3)))
       q4 = rotate(rotate(rotate(parse_tile(q4))))
@@ -142,37 +141,38 @@ $ ->
         _(q1.length).times (y) ->
           _(q1[y].length).times (x) ->
             self.board[y][x] = q1[y][x]
-        #Quadrant 2 into board, and checking with wall conflicts on q1
-        _(q2.length).times (y) ->
-          if(self.board[y][q1.length - 1].type is "wall" || q2[y][0].type is "wall")
+        #Quadrant 4 into board, and checking with wall conflicts on q1
+        _(q4.length).times (y) ->
+          if(self.board[y][q1.length - 1].type is "wall" || q4[y][0].type is "wall")
             self.board[y][q1.length - 1] = LEGEND['w']
-        _(q2.length).times (y) ->
-          _(q2[y].length).times (x) ->
+        _(q4.length).times (y) ->
+          _(q4[y].length).times (x) ->
             if(x>0)
-              self.board[y][x + q1[0].length - 1] = q2[y][x]
-        #Quadrant 3 into board, checking with wall conflicts on q2
+              self.board[y][x + q1[0].length - 1] = q4[y][x]
+        #Quadrant 3 into board, checking with wall conflicts on q4
+        console.log(q1[0].length - 1);
         _(q3.length).times (x) =>
-          if(self.board[q2.length - 1][x + q4[0].length - 1].type is "wall" || q3[q2.length - 1][x + q1[0].length - 1].type is "wall")
-            self.board[q2.length - 1][x + q4[0].length - 1] = LEGEND['w']
+          if(self.board[q4.length - 1][x + q1[0].length - 1].type is "wall" || q3[0][x].type is "wall")
+            self.board[q4.length - 1][x + q1[0].length - 1] = LEGEND['w']
         _(q3.length).times (y) =>
           if(y>0)
             _(q3[y].length).times (x) =>
-              self.board[y + q2.length - 1][x + q4[0].length - 1] = q3[y][x]
-        #Quadrant 4 into board, checking with conflicts on q1 AND q3. Tricky.
-          #Quadrant 4 and 1
-        _(q4.length).times (x) =>
-          if(self.board[q1.length - 1][x].type is "wall" || q4[0][x].type is "wall")
+              self.board[y + q4.length - 1][x + q2[0].length - 1] = q3[y][x]
+        #Quadrant 2 into board, checking with conflicts on q1 AND q3. Tricky.
+          #Quadrant 2 and 1
+        _(q2.length).times (x) =>
+          if(self.board[q1.length - 1][x].type is "wall" || q2[0][x].type is "wall")
             self.board[q1.length - 1][x] = LEGEND['w']
-          #Quadrant 4 and 3
-        _(q4.length).times (y) =>
-          if(self.board[y + q1.length - 1][q4.length - 1].type is "wall" || q3[y][0].type is "wall")
-            self.board[y + q4.length - 1][q4[0].length - 1] = LEGEND['w']
-          #Filling in the rest of q4
-        _(q4.length).times (y) =>
+          #Quadrant 2 and 3
+        _(q2.length).times (y) =>
+          if(self.board[y + q1.length - 1][q2.length - 1].type is "wall" || q3[y][0].type is "wall")
+            self.board[y + q2.length - 1][q2[0].length - 1] = LEGEND['w']
+          #Filling in the rest of q2
+        _(q2.length).times (y) =>
           if(y>0)
-            _(q4[y].length).times (x) =>
-              if(x<q4[0].length - 1)
-                self.board[y + q1.length - 1][x] = q4[y][x]
+            _(q2[y].length).times (x) =>
+              if(x<q2[0].length - 1)
+                self.board[y + q1.length - 1][x] = q2[y][x]
       concat()
 
     draw: (selector) ->
