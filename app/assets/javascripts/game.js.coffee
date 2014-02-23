@@ -363,11 +363,15 @@ $ ->
       
     is_solved: () ->
       if @current_target.symbol is "cosmic" && @board[@selected_robot.y][@selected_robot.x].type=="target" && @board[@selected_robot.y][@selected_robot.x].symbol=="cosmic"
+        @on_solved() if @on_solved()
         return true
       else if @board[@selected_robot.y][@selected_robot.x].type=="target" && @selected_robot.color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].symbol==@current_target.symbol
+        @on_solved() if @on_solved()
         return true
       else
         return false
+
+
 
     reset: () =>
       _(@robots).each (robot) =>
@@ -401,6 +405,7 @@ $ ->
           @selected_robot.x+=2
 
       @draw()
+      @is_solved()
 
 
     cycle_robot: (direction) ->
@@ -466,6 +471,7 @@ $ ->
   window.game = new Game('#game', q1, q2, q3, q4)
   game.get_target()
   game.draw()
+  game.on_solved=->console.log("yay")
 
   url = $('#game').data('uri')
   net = new Net(url)
