@@ -389,14 +389,24 @@ $ ->
       @current_target = @targets.pop()
       
     is_solved: () ->
-      if @board[@selected_robot.y][@selected_robot.x].type=="target" && @selected_robot.color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].symbol==@current_target.symbol
+      bored = @board[@selected_robot.y][@selected_robot.x]
+      if bored.type=="target" && @selected_robot.color is @current_target.color && bored.color is @current_target.color && bored.symbol==@current_target.symbol
         @on_solved(@moves) if @on_solved
         return true
-      else if @current_target.symbol is "cosmic" && @board[@selected_robot.y][@selected_robot.x].type=="target" && @board[@selected_robot.y][@selected_robot.x].symbol=="cosmic"
+      else if @current_target.symbol is "cosmic" && bored.type=="target" && bored.symbol=="cosmic"
         @on_solved(@moves) if @on_solved
         return true
       else
         return false
+
+      #if @board[@selected_robot.y][@selected_robot.x].type=="target" && @selected_robot.color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].symbol==@current_target.symbol
+      # @on_solved(@moves) if @on_solved
+      # return true
+     # else if @current_target.symbol is "cosmic" && @board[@selected_robot.y][@selected_robot.x].type=="target" && @board[@selected_robot.y][@selected_robot.x].symbol=="cosmic"
+     #  @on_solved(@moves) if @on_solved
+     #  return true
+     #else
+     #  return false
 
 
 
