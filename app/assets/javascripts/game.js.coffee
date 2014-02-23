@@ -117,7 +117,7 @@ $ ->
   ]
 
   class Game
-    constructor: (q1, q2, q3, q4) ->
+    constructor: (@selector, q1, q2, q3, q4) ->
       self=this
       parse_tile = (tile) ->
         _(tile).map (row) ->
@@ -209,7 +209,7 @@ $ ->
 
 
 
-    draw: (selector) ->
+    draw: () ->
       # Test board
       arr = []
       _(33).times ->
@@ -221,8 +221,8 @@ $ ->
       s = 800
       w = s / 16
 
-      $(selector).empty()
-      canvas = $('<canvas/>').attr({width: s, height: s}).appendTo(selector)
+      $(@selector).empty()
+      canvas = $('<canvas/>').attr({width: s, height: s}).appendTo(@selector)
 
       context = canvas.get(0).getContext("2d")
 
@@ -328,29 +328,29 @@ $ ->
       #Game Logic
       #-move robot
     move_robot: (direction) ->
-      @selected_robot
+      console.log(@selected_robot)
       if direction is "up"
         while true
-          break if @board[@selected_robot.y-1][@selected_robot.x].type=="wall" || _(@robots).some (robot) ->
-            robot.x == @selected_robot.x && robot.y == @selected_robots.y-2
+          break if @board[@selected_robot.y-1][@selected_robot.x].type=="wall" || _(@robots).some (robot) =>
+            robot.x == @selected_robot.x && robot.y == @selected_robot.y-2
           @selected_robot.y-=2
       if direction is "down"
         while true
-          break if @board[@selected_robot.y+1][@selected_robot.x].type=="wall" || _(@robots).some (robot) ->
-            robot.x == @selected_robot.x && robot.y == @selected_robots.y+2
+          break if @board[@selected_robot.y+1][@selected_robot.x].type=="wall" || _(@robots).some (robot) =>
+            robot.x == @selected_robot.x && robot.y == @selected_robot.y+2
           @selected_robot.y+=2
       if direction is "left"
         while true
-          break if @board[@selected_robot.y][@selected_robot.x-1].type=="wall" || _(@robots).some (robot) ->
-            robot.x == @selected_robot.x-2 && robot.y == @selected_robots.y
+          break if @board[@selected_robot.y][@selected_robot.x-1].type=="wall" || _(@robots).some (robot) =>
+            robot.x == @selected_robot.x-2 && robot.y == @selected_robot.y
           @selected_robot.x-=2
       if direction is "right"
         while true
-          break if @board[@selected_robot.y][@selected_robot.x+1].type=="wall" || _(@robots).some (robot) ->
-            robot.x == @selected_robot.x+2 && robot.y == @selected_robots.y
+          break if @board[@selected_robot.y][@selected_robot.x+1].type=="wall" || _(@robots).some (robot) =>
+            robot.x == @selected_robot.x+2 && robot.y == @selected_robot.y
           @selected_robot.x+=2
 
-      draw_board()
+      @draw()
 
 
   class Robot
@@ -358,6 +358,6 @@ $ ->
       @start_x = @x
       @start_y = @y
 
-  game = new Game(q1, q2, q3, q4)
-  game.draw $('#game')
+  window.game = new Game('#game', q1, q2, q3, q4)
+  game.draw()
 
