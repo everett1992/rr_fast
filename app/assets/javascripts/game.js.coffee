@@ -389,10 +389,10 @@ $ ->
       @current_target = @targets.pop()
       
     is_solved: () ->
-      if @current_target.symbol is "cosmic" && @board[@selected_robot.y][@selected_robot.x].type=="target" && @board[@selected_robot.y][@selected_robot.x].symbol=="cosmic"
+      if @board[@selected_robot.y][@selected_robot.x].type=="target" && @selected_robot.color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].symbol==@current_target.symbol
         @on_solved(@moves) if @on_solved
         return true
-      else if @board[@selected_robot.y][@selected_robot.x].type=="target" && @selected_robot.color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].symbol==@current_target.symbol
+      else if @current_target.symbol is "cosmic" && @board[@selected_robot.y][@selected_robot.x].type=="target" && @board[@selected_robot.y][@selected_robot.x].symbol=="cosmic"
         @on_solved(@moves) if @on_solved
         return true
       else
@@ -567,5 +567,5 @@ $ ->
     else if e.keyCode is 114
       game.reset()
 
-  $('#game').keypress(handleKeypress)
+  $(document).keypress(handleKeypress)
   $('#new-game').on "click", new_game
