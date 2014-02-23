@@ -130,11 +130,7 @@ $ ->
 
       #NUMBERWANG
       q1 = parse_tile(q1)
-      #console.log((_(q1).map (m) -> (_(m).map (n) -> n.type).join("")))
-      #console.log(q1)
       q2 = rotate(parse_tile(q2))
-      console.log((_(q2).map (m) -> (_(m).map (n) -> n.type).join("")))
-      console.log(q2)
       q3 = rotate(rotate(parse_tile(q3)))
       q4 = rotate(rotate(rotate(parse_tile(q4))))
       concat = ->
@@ -148,7 +144,6 @@ $ ->
         #Quadrant 2 into board, and checking with wall conflicts on q1
         _(q2.length).times (y) ->
           if(self.board[y][q1.length - 1].type is "wall" || q2[y][0].type is "wall")
-            #console.log("true")
             self.board[y][q1.length - 1] = LEGEND['w']
         _(q2.length).times (y) ->
           _(q2[y].length).times (x) ->
@@ -157,32 +152,26 @@ $ ->
         #Quadrant 3 into board, checking with wall conflicts on q2
         _(q3.length).times (x) =>
           if(self.board[q2.length - 1][x + q4[0].length - 1].type is "wall" || q3[q2.length - 1][x + q1[0].length - 1].type is "wall")
-            #console.log("true")
             self.board[q2.length - 1][x + q4[0].length - 1] = LEGEND['w']
         _(q3.length).times (y) =>
           if(y>0)
             _(q3[y].length).times (x) =>
               self.board[y + q2.length - 1][x + q4[0].length - 1] = q3[y][x]
-              ###
         #Quadrant 4 into board, checking with conflicts on q1 AND q3. Tricky.
           #Quadrant 4 and 1
         _(q4.length).times (x) =>
-          if(@board[q1.length - 1][x].type is "wall" || q4[0][x].type is "wall")
-            #console.log("true")
-            @board[q1.length - 1][x] = LEGEND['w']
+          if(self.board[q1.length - 1][x].type is "wall" || q4[0][x].type is "wall")
+            self.board[q1.length - 1][x] = LEGEND['w']
           #Quadrant 4 and 3
         _(q4.length).times (y) =>
-          if(@board[y + q1.length - 1][q4.length - 1].type is "wall" || q3[y][0].type is "wall")
-            #console.log(@board[y + q1.length - 1][q4.length - 1])
-            @board[y + q4.length - 1][q4[0].length - 1] = LEGEND['w']
+          if(self.board[y + q1.length - 1][q4.length - 1].type is "wall" || q3[y][0].type is "wall")
+            self.board[y + q4.length - 1][q4[0].length - 1] = LEGEND['w']
           #Filling in the rest of q4
         _(q4.length).times (y) =>
           if(y>0)
             _(q4[y].length).times (x) =>
               if(x<q4[0].length - 1)
-                @board[y + q1.length - 1][x] = q4[y][x]
-                ###
-        console.log(self.board)
+                self.board[y + q1.length - 1][x] = q4[y][x]
       concat()
 
     draw: (canvas) ->
@@ -208,5 +197,6 @@ $ ->
 
       drawBoard()
 
-  sampleBoard = new Game(q1, q2, q3, q4)
+  game = new Game(q1, q2, q3, q4)
+  console.log(game.board)
 
