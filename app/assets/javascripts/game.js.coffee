@@ -328,7 +328,6 @@ $ ->
       #Game Logic
       #-move robot
     move_robot: (direction) ->
-      console.log(@selected_robot)
       if direction is "up"
         while true
           break if @board[@selected_robot.y-1][@selected_robot.x].type=="wall" || _(@robots).some (robot) =>
@@ -353,6 +352,23 @@ $ ->
       @draw()
 
 
+    cycle_robot: (direction) ->
+      checker=false
+      if direction is "right"
+        _(@robots).each (robot,n) =>
+          if(@selected_robot.color is robot.color && !checker)
+            @selected_robot = @robots[(n+1)%4]
+            checker=true
+      else if direction is "left"
+        _(@robots).each (robot,n) =>
+          if(@selected_robot.color is robot.color && !checker)
+            if n - 1 < 0
+              @selected_robot = @robots[3]
+            else
+              @selected_robot = @robots[(n-1)%4]
+            checker=true
+      @draw()
+
 
 
   class Robot
@@ -371,5 +387,9 @@ $ ->
       game.move_robot("down")
     else if e.keyCode is 100
       game.move_robot("right")
+    else if e.keyCode is 101
+      game.cycle_robot("right")
+    else if e.keyCode is 113
+      game.cycle_robot("left")
 
   $(document).keypress(handleKeypress)
