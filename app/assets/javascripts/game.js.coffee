@@ -226,6 +226,16 @@ $ ->
                 context.moveTo(x, y)
                 context.lineTo(x + w, y)
 
+              else if !even(i) && !even(j)
+                x = 0.5 * w * i - 0.5 * w
+                y = 0.5 * w * j - 0.5 * w
+                console.log(x,y)
+                context.strokeStyle = "black"
+                context.fillStyle = "black"
+                context.fillRect(x,y,w,w)
+
+                context.stroke()
+
         context.lineWidth = 5
         context.strokeStyle = "black"
         context.stroke()
@@ -236,7 +246,7 @@ $ ->
 
         _(@board).each (row, j) ->
           _(row).each (cell, i) ->
-            if cell.color
+            if cell.type == 'target'
               x = w * 0.5 * i
               y = w * 0.5 * j + 0.3 * w
 
@@ -246,16 +256,6 @@ $ ->
               context.textAlign = "center"
               context.testBaseline = "middle"
               context.fillText(SYM_TABLE[cell.symbol], x, y)
-
-            else if cell.type == "wall" && !even(i) && !even(j)
-              x = 0.5 * w * i - 0.5 * w
-              y = 0.5 * w * j - 0.5 * w
-              console.log(x,y)
-              context.strokeStyle = "black"
-              context.fillStyle = "black"
-              context.fillRect(x,y,w,w)
-
-              context.stroke()
 
         context.lineWidth = 5
 
