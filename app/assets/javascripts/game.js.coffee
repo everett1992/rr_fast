@@ -131,16 +131,20 @@ $ ->
       q3 = rotate(rotate(parse_tile(q3)))
       q4 = rotate(rotate(rotate(parse_tile(q4))))
 
-    draw: (canvas) ->
+    draw: (selector) ->
       p = 30
       bh = 1320
-      bh = 1320
+      bw = 1320
       cw = bw + (p*4) + 2
       ch = bh + (p*4) + 2
+      selector.empty
+
+      $(selector).empty()
+      canvas = $('<canvas/>').attr({width: cw, height: ch}).appendTo(selector)
 
       context = canvas.get(0).getContext("2d")
 
-      drawBoard() ->
+      drawBoard=() ->
         for x in [0..bw] by 40
           context.moveTo(0.5 + x + p, p)
           context.lineTo(0.5 + x + p, bh + p)
@@ -155,4 +159,5 @@ $ ->
       drawBoard()
 
   board = new Board(q1, q2, q3, q4)
+  board.draw $("#game")
 
