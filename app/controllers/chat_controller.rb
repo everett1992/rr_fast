@@ -2,10 +2,10 @@ class ChatController < WebsocketRails::BaseController
   include ActionView::Helpers::SanitizeHelper
 
   def new_user
-    logger.info '--------------'
     connection_store[:user] = {
-      user_name: (message[:user_name]),
-      points: (message[:points])
+      user_name: message[:user_name],
+      points: message[:points],
+      best_solution: message[:best_solution]
     }
     game = controller_store[:game]
     if game
@@ -23,9 +23,27 @@ class ChatController < WebsocketRails::BaseController
     broadcast_user_list
   end
 
+  def solve
+    logger.info "---------"
+    logger.info "solved by #{message[:user_name]}"
+
+    moves = connection_store.collect_all(:user).map { |user| user[:best_solution] }
+    unless moves.any? { |m| !m.nil? }
+      controller_store[:game][:end_time] = 1.minute.from_now
+      broadcast_message :set_end, controller_store[:game][:end_time].to_i * 1000
+    end
+
+    connection_store[:user] = {
+      user_name: message[:user_name],
+      points: message[:points],
+      best_solution: message[:best_solution]
+    }
+    broadcast_user_list
+
+  end
+
   def broadcast_user_list
     users = connection_store.collect_all(:user)
-    logger.info users
     broadcast_message :user_list, users
   end
 end

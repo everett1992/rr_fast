@@ -380,11 +380,15 @@ $ ->
       
     is_solved: () ->
       if @current_target.symbol is "cosmic" && @board[@selected_robot.y][@selected_robot.x].type=="target" && @board[@selected_robot.y][@selected_robot.x].symbol=="cosmic"
+        @on_solved(@moves) if @on_solved
         return true
       else if @board[@selected_robot.y][@selected_robot.x].type=="target" && @selected_robot.color is @current_target.color && @board[@selected_robot.y][@selected_robot.x].symbol==@current_target.symbol
+        @on_solved(@moves) if @on_solved
         return true
       else
         return false
+
+
 
     reset: () =>
       _(@robots).each (robot) =>
@@ -422,6 +426,7 @@ $ ->
           @selected_robot.x+=2
 
       @draw()
+      @is_solved()
 
 
     cycle_robot: (direction) ->
@@ -451,7 +456,8 @@ $ ->
   class User
     constructor: (@user_name) ->
       @points = 0
-    serialize: => { user_name: @user_name, points: @points }
+      @best_solution = null
+    serialize: => { user_name: @user_name, points: @points, best_solution: @best_solution }
 
   class Net
     constructor: (uri) ->
@@ -462,7 +468,10 @@ $ ->
     userListTemplate: (userList) ->
         userHtml = ""
         for user in userList
-          userHtml = userHtml + "<li>#{user.user_name} - #{user.points}</li>"
+          userHtml = userHtml + "<li>#{user.user_name} - #{user.points} points"
+          if user.best_solution
+            userHtml = userHtml + "#{user.best_solution.length} best solution"
+          userHtml = userHtml + "</li>"
         $(userHtml)
 
     update_user_list: (user_list) =>
@@ -483,23 +492,36 @@ $ ->
     set_game: (game) =>
       @dispatcher.trigger "set_game", game.serialize()
 
+    solve: (moves) =>
+      console.log "solved"
+      if !@user.best_solution || moves.length < @user.best_solution.length
+        @user.best_solution = moves
+        @dispatcher.trigger 'solve', @user.serialize()
+
     get_game: (game_data) =>
       console.log(game_data)
       window.game = new Game('#game', q1, q2, q3, q4, game_data)
+      game.on_solved = (moves) ->
+        net.solve(moves)
       net.set_game game
       game.draw()
+
+    set_end: (time) =>
+      console.log(time - Date.now())
 
     bind_events: () =>
       @dispatcher.bind 'user_list', @update_user_list
       @dispatcher.bind 'get_game', @get_game
+      @dispatcher.bind 'set_end', @set_end
       $('input#user_name').on 'keyup', @update_user_info
 
   url = $('#game').data('uri')
-  net = new Net(url)
+  window.net = new Net(url)
 
   new_game = () ->
     window.game = new Game('#game', q1, q2, q3, q4)
-    game.get_target()
+    game.on_solved = (moves) ->
+      net.solve(moves)
     net.set_game game
     game.draw()
 
