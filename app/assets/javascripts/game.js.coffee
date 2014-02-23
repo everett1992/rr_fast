@@ -565,7 +565,7 @@ $ ->
       if(time<=0)
         @dispatcher.trigger('end_round')
       else
-        $('#clock').html(time)
+        $('#clock').html("#{time / 1000} seconds")
         setTimeout((=>@set_clock(time-100)), 100)
     declare_winner: (user)=>
       game.reset()
