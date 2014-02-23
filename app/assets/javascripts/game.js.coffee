@@ -620,3 +620,5 @@ $ ->
   $(document).keypress(handleKeypress)
   $('#new-game').on "click", new_game
   $('#next-round'). on "click", net.next_round
+  $('#user_name'). on "focusin", (-> LOCKBOOL=true)
+  $('#user_name'). on "focusout", (-> LOCKBOOL=false)
